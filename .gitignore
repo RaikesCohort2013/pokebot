@@ -10,3 +10,4 @@ env
 tests/.cache
 .coverage
 .cache
+venv
