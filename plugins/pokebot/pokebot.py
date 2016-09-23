@@ -48,6 +48,11 @@ LOCATIONS = {
     "horseshoe": (40.8205647, -96.7025721)
 }
 
+LOCATION_GROUPS = {
+    "campus": { "kauffman", "fountain", "avery", "cba", "horseshoe" },
+    "haymarket": {"hudl", "pba" }
+}
+
 
 crontable = []
 outputs = []
@@ -101,6 +106,9 @@ def process_message(data):
         if location == 'ping' or location == 'everywhere':
             print("everywhere")
             for location in LOCATIONS:
+                ping_location(data['channel'], location)
+        elif location in LOCATION_GROUPS:
+            for location in LOCATION_GROUPS[location]:
                 ping_location(data['channel'], location)
         elif location not in LOCATIONS:
             print("invalid")
