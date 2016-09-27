@@ -92,7 +92,9 @@ def send_message(channel, message):
 
 
 def ping_location(channel, location):
-    send_message(channel, ":mag: Looking for Pokemon at {0}".format(location))
+    message = ":mag: Looking for Pokemon at {0}\n".format(location)
+    message += WEB_URL.format(*LOCATIONS[location])
+    send_message(channel, message)
     data = hit_api_cache(location)
     process_data(channel, location, data, "Cached pokemon found")
     data = hit_api(location)
@@ -108,8 +110,7 @@ def process_data(channel, location, data, keyword):
     message = "{0} near {1}: {2}\n".format(keyword, location, pokemon)
     if len(rare):
         rares = ' '.join([format_pokemon(p) for p in rare])
-        message += '<!channel> RARE POKEMON! {0}\n'.format(rares)
-    message += WEB_URL.format(*LOCATIONS[location])
+        message += '<!channel> RARE POKEMON! {0}'.format(rares)
     send_message(channel, message)
 
 
