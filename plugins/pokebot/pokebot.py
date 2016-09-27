@@ -49,11 +49,12 @@ LOCATIONS = {
     "pba": (40.8168074, -96.7119382),
     "avery": (40.8193549, -96.7045140),
     "cba": (40.8178122, -96.7035162),
-    "horseshoe": (40.8205647, -96.7025721)
+    "horseshoe": (40.8205647, -96.7025721),
+    "cpn": (40.8185592, -96.6969609)
 }
 
 LOCATION_GROUPS = {
-    "campus": {"kauffman", "fountain", "avery", "cba", "horseshoe"},
+    "campus": {"kauffman", "fountain", "avery", "cba", "horseshoe", "cpn"},
     "haymarket": {"hudl", "pba"}
 }
 
