@@ -89,7 +89,7 @@ def ping_location(channel, location):
     message = "Found near {0}: {1}".format(location, pokemon)
     if len(rare):
         rares = ' '.join([emoji(p) for p in rare])
-        message += '\n@channel RARE POKEMON! {0}\n'.format(rares)
+        message += '\n<!channel> RARE POKEMON! {0}\n'.format(rares)
     send_message(channel, message)
 
 
