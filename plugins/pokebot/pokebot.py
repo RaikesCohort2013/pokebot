@@ -1,4 +1,6 @@
+import datetime
 import requests
+
 from client import slack_client as sc
 
 
@@ -75,8 +77,13 @@ def hit_api_cache(location):
     return hit_api(location, url=CACHE_URL)
 
 
-def emoji(pokemon):
-    return ':{0}:'.format(pokemon.lower())
+def format_pokemon(pokemon):
+    despawn = datetime.datetime.fromtimestamp(pokemon[1] / 1000.0)
+    despawn = despawn - datetime.now()
+    minutes, seconds = divmod(despawn.total_seconds(), 60)
+    seconds = str(int(seconds))
+    seconds = seconds if len(seconds) == 2 else "0" + seconds
+    return ':{0}: {1}:{2}'.format(pokemon[0].lower(), str(int(minutes)), seconds)
 
 
 def send_message(channel, message):
@@ -92,13 +99,14 @@ def ping_location(channel, location):
 
 
 def process_data(channel, location, data, keyword):
-    pokemon = [p['pokemon_id'].lower() for p in data['result'] if 'pokemon_id' in p]
-    pokemon = [p for p in pokemon if p not in COMMON]
-    rare = [p for p in pokemon if p in RARE]
-    pokemon = ' '.join([emoji(p) for p in pokemon])
+    pokemon = [(p['pokemon_id'].lower(), p['expiration_timestamp_ms'])
+               for p in data['result'] if 'pokemon_id' in p]
+    pokemon = [p for p in pokemon if p[0] not in COMMON]
+    rare = [p for p in pokemon if p[0] in RARE]
+    pokemon = ' '.join([format_pokemon(p) for p in pokemon])
     message = "{0} near {1}: {2}".format(keyword, location, pokemon)
     if len(rare):
-        rares = ' '.join([emoji(p) for p in rare])
+        rares = ' '.join([format_pokemon(p) for p in rare])
         message += '\n<!channel> RARE POKEMON! {0}\n'.format(rares)
     send_message(channel, message)
 
