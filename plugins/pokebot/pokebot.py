@@ -6,6 +6,7 @@ from client import slack_client as sc
 
 URL = 'https://api.fastpokemap.se/?key=allow-all&ts=0&lat={0}&lng={1}'
 CACHE_URL = 'https://cache.fastpokemap.se/?key=allow-all&ts=0&lat={0}&lng={1}'
+WEB_URL = 'https://fastpokemap.se/#{0},{1}'
 
 
 HEADERS = {
@@ -104,10 +105,11 @@ def process_data(channel, location, data, keyword):
     pokemon = [p for p in pokemon if p[0] not in COMMON]
     rare = [p for p in pokemon if p[0] in RARE]
     pokemon = ' '.join([format_pokemon(p) for p in pokemon])
-    message = "{0} near {1}: {2}".format(keyword, location, pokemon)
+    message = "{0} near {1}: {2}\n".format(keyword, location, pokemon)
     if len(rare):
         rares = ' '.join([format_pokemon(p) for p in rare])
-        message += '\n<!channel> RARE POKEMON! {0}\n'.format(rares)
+        message += '<!channel> RARE POKEMON! {0}\n'.format(rares)
+    message += WEB_URL.format(*LOCATIONS[location])
     send_message(channel, message)
 
 
