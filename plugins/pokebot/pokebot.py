@@ -3,6 +3,7 @@ from client import slack_client as sc
 
 
 URL = 'https://api.fastpokemap.se/?key=allow-all&ts=0&lat={0}&lng={1}'
+CACHE_URL = 'https://cache.fastpokemap.se/?key=allow-all&ts=0&lat={0}&lng={1}'
 
 
 HEADERS = {
@@ -49,8 +50,8 @@ LOCATIONS = {
 }
 
 LOCATION_GROUPS = {
-    "campus": { "kauffman", "fountain", "avery", "cba", "horseshoe" },
-    "haymarket": {"hudl", "pba" }
+    "campus": {"kauffman", "fountain", "avery", "cba", "horseshoe"},
+    "haymarket": {"hudl", "pba"}
 }
 
 
@@ -58,10 +59,9 @@ crontable = []
 outputs = []
 
 
-def hit_api(location):
+def hit_api(location, url=URL):
     try:
-        print("hitting api for {0}".format(location))
-        url = URL.format(*LOCATIONS[location])
+        url = url.format(*LOCATIONS[location])
         response = requests.get(url, headers=HEADERS)
         data = response.json()
         if 'result' not in data:
@@ -69,6 +69,10 @@ def hit_api(location):
         return data
     except Exception:
         return hit_api(location)
+
+
+def hit_api_cache(location):
+    return hit_api(location, url=CACHE_URL)
 
 
 def emoji(pokemon):
@@ -81,12 +85,18 @@ def send_message(channel, message):
 
 def ping_location(channel, location):
     send_message(channel, ":mag: Looking for Pokemon at {0}".format(location))
+    data = hit_api_cache(location)
+    process_data(channel, location, data, "Cached pokemon found")
     data = hit_api(location)
+    process_data(channel, location, data, "Found")
+
+
+def process_data(channel, location, data, keyword):
     pokemon = [p['pokemon_id'].lower() for p in data['result'] if 'pokemon_id' in p]
     pokemon = [p for p in pokemon if p not in COMMON]
     rare = [p for p in pokemon if p in RARE]
     pokemon = ' '.join([emoji(p) for p in pokemon])
-    message = "Found near {0}: {1}".format(location, pokemon)
+    message = "{0} near {1}: {2}".format(keyword, location, pokemon)
     if len(rare):
         rares = ' '.join([emoji(p) for p in rare])
         message += '\n<!channel> RARE POKEMON! {0}\n'.format(rares)
