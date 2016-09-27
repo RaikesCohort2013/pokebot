@@ -78,7 +78,7 @@ def hit_api_cache(location):
 
 
 def format_pokemon(pokemon):
-    despawn = datetime.datetime.fromtimestamp(pokemon[1] / 1000.0)
+    despawn = datetime.datetime.fromtimestamp(int(pokemon[1]) / 1000.0)
     despawn = despawn - datetime.now()
     minutes, seconds = divmod(despawn.total_seconds(), 60)
     seconds = str(int(seconds))
