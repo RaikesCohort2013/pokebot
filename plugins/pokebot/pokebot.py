@@ -53,7 +53,7 @@ RARE = [
     "clefairy",
     "clefable",
     "vulpix",
-    "ninetails",
+    "ninetales",
     "vileplume",
     "diglett",
     "dugtrio",
