@@ -24,9 +24,9 @@ COMMON = [
     "rattata",
     "spearow",
     "zubat",
-    "oddish",
     "paras",
-    "drowzee"
+    "drowzee",
+    "kakuna"
 ]
 
 
@@ -202,20 +202,27 @@ def invalid_location(location):
     return message
 
 
-def process_message(data):
-    if '<@' in data['text'] and ' ping ' in data['text']:
-        print(data['text'])
-        location = data['text'].split(' ')[-1]
-        if location == 'ping' or location == 'everywhere':
-            print("everywhere")
-            for location in LOCATIONS:
-                ping_location(data['channel'], location)
-        elif location in LOCATION_GROUPS:
-            for location in LOCATION_GROUPS[location]:
-                ping_location(data['channel'], location)
-        elif location not in LOCATIONS:
-            print("invalid")
-            outputs.append([data['channel'], invalid_location(location)])
-        else:
-            print("valid")
+def do_the_thing(data):
+    location = data['text'].split(' ')[-1]
+    if location == 'ping' or location == 'everywhere':
+        print("everywhere")
+        for location in LOCATIONS:
             ping_location(data['channel'], location)
+    elif location in LOCATION_GROUPS:
+        for location in LOCATION_GROUPS[location]:
+            ping_location(data['channel'], location)
+    elif location not in LOCATIONS:
+        print("invalid")
+        outputs.append([data['channel'], invalid_location(location)])
+    else:
+        print("valid")
+        ping_location(data['channel'], location)
+
+
+def process_message(data):
+    conditions = [
+        '<@' in data['text'] and ' ping ' in data['text'],
+        'pbp ' in data['text']
+    ]
+    if any(conditions):
+        do_the_thing(data)
