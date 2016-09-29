@@ -198,6 +198,8 @@ def do_the_thing(data):
     elif location in LOCATION_GROUPS:
         for location in LOCATION_GROUPS[location]:
             ping_location(data['channel'], location)
+    elif location == "urmom" or location == "urmum":
+        outputs.append([data['channel'], "Urmom was found: :snorlax:"])
     elif location not in LOCATIONS:
         print("invalid")
         outputs.append([data['channel'], invalid_location(location)])
