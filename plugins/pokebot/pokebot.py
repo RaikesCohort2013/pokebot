@@ -21,6 +21,8 @@ COMMON = [
     "caterpie",
     "weedle",
     "pidgey",
+    "pidgeotto",
+    "pidgeot",
     "rattata",
     "spearow",
     "zubat",
