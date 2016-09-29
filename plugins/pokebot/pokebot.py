@@ -26,7 +26,8 @@ COMMON = [
     "zubat",
     "paras",
     "drowzee",
-    "kakuna"
+    "kakuna",
+    "venonat"
 ]
 
 
@@ -203,7 +204,7 @@ def invalid_location(location):
 
 
 def do_the_thing(data):
-    location = data['text'].split(' ')[-1]
+    location = data['text'].split(' ')[-1].lower()
     if location == 'ping' or location == 'everywhere':
         print("everywhere")
         for location in LOCATIONS:
